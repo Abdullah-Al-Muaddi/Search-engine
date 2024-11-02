@@ -1,4 +1,4 @@
-################### Boolean Retrieval ####################
+################### Boolean Retrieval #####################
 
 # Q: market AND sports
 Result doc IDs: {41}
