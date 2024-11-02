@@ -16,7 +16,7 @@ public class LinkedList<T> {
     }
 
     public boolean last() {
-        return current.getNext() == null;
+        return current.next() == null;
     }
 
     public boolean full() {
@@ -28,11 +28,11 @@ public class LinkedList<T> {
     }
 
     public void findNext() {
-        current = current.getNext();
+        current = current.next();
     }
 
     public T retrieve() {
-        return current.getData();
+        return current.data();
     }
 
     public void update(T val) {
@@ -45,30 +45,30 @@ public class LinkedList<T> {
         if (empty()) {
             current = head = new Node<>(val);
         } else {
-            tmp = current.getNext();
+            tmp = current.next();
             current.setNext(new Node<>(val));
-            current = current.getNext();
+            current = current.next();
             current.setNext(tmp);
         }
     }
 
     public void remove() {
         if (current == head) {
-            head = head.getNext();
+            head = head.next();
         } else {
             Node<T> tmp = head;
 
-            while (tmp.getNext() != current) {
-                tmp = tmp.getNext();
+            while (tmp.next() != current) {
+                tmp = tmp.next();
             }
 
-            tmp.setNext(current.getNext());
+            tmp.setNext(current.next());
         }
 
-        if (current.getNext() == null) {
+        if (current.next() == null) {
             current = head;
         } else {
-            current = current.getNext();
+            current = current.next();
         }
     }
 }

@@ -26,11 +26,11 @@ public class Node<T> {
     }
 
 // ====================> Getters <====================
-    public T getData() {
+    public T data() {
         return data;
     }
 
-    public Node<T> getNext() {
+    public Node<T> next() {
         return next;
     }
 }
