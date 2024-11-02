@@ -1,12 +1,10 @@
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-
 import java.io.FileReader;
 import java.io.FileWriter;
-
 import java.util.ArrayList; // Change it to manual
-import java.util.List; 
+import java.util.List;
 
 /*
 1- Documenet processing
@@ -46,34 +44,36 @@ import java.util.List;
 
 6- LinkedList stores all words in the documenets 
 
-*/
+ */
+public class Main {
 
-public class Main{
-    public static void main(String[] args) throws Exception{
-        String line="";
-        String word="";
+    public static void main(String[] args) throws Exception {
+        String line = "";
+        String word = "";
 
-        List<String> stopWords= new ArrayList<>(); // We may change it to hashset because it much faster.
+        List<String> stopWords = new ArrayList<>(); // We may change it to hashset because it much faster.
 
         BufferedReader stopWords_reader = new BufferedReader(new FileReader("data/stop.txt"));
         BufferedReader reader = new BufferedReader(new FileReader("data\\dataset.csv"));
         BufferedWriter writer = new BufferedWriter(new FileWriter("data/newDataset.txt"));
 
-        while((line=stopWords_reader.readLine())!=null)
+        while ((line = stopWords_reader.readLine()) != null) {
             stopWords.add(line.trim());
+        }
 
-        line=""; // Make it empty again
+        line = ""; // Make it empty again
 
-        while((line = reader.readLine())!=null && !(line.equals(",,"))) {
-            String[] data = line.split(",",2); // Limit=2 means we don't care about the commas that in 
+        while ((line = reader.readLine()) != null && !(line.equals(",,"))) {
+            String[] data = line.split(",", 2); // Limit=2 means we don't care about the commas that in 
             // System.out.println(data[0]);
             String[] words = data[1].toLowerCase().split(" "); // Convert it to lowercase, and then split it into words.
 
-            for (int i =1 ; i <words.length;i++)
-                if (!stopWords.contains(words[i])){
-                    word = words[i].replaceAll("\\W+",""); // Remove all punctuations and non-alphanumerical characters
-                    writer.write(word+" ");
+            for (int i = 1; i < words.length; i++) {
+                if (!stopWords.contains(words[i])) {
+                    word = words[i].replaceAll("\\W+", ""); // Remove all punctuations and non-alphanumerical characters
+                    writer.write(word + " ");
                 }
+            }
 
             writer.newLine();
         }
