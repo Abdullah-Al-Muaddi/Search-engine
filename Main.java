@@ -3,8 +3,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList; // Change it to manual
-import java.util.List;
 
 /*
 1- Documenet processing
@@ -50,32 +48,45 @@ public class Main {
     public static void main(String[] args) throws Exception {
         String line = "";
         String word = "";
+        int docId=0;
 
-        List<String> stopWords = new ArrayList<>(); // We may change it to hashset because it much faster.
+    //---------------------------------------> Binary Search Tree (Will be changed to AVL afterward)<-----------------------------------------
+        BST<String,Integer> stopWords = new BST<>();
+        BST<Integer, LinkedList<String>> forwardIndex = new BST<>();//used to save each document with it exact words
+        BST<String, LinkedList<Integer>> invertedIndex = new BST<>(); //under maintenance
 
+    //---------------------------------------> File Read / Write <------------------------------------<
         BufferedReader stopWords_reader = new BufferedReader(new FileReader("data/stop.txt"));
         BufferedReader reader = new BufferedReader(new FileReader("data\\dataset.csv"));
         BufferedWriter writer = new BufferedWriter(new FileWriter("data/newDataset.txt"));
 
+    //--------------------------------------->Linked Lists<--------------------------------------------
+    // LinkedList<String> indexing = new LinkedList<>();
+
+
+
         while ((line = stopWords_reader.readLine()) != null) {
-            stopWords.add(line.trim());
+            stopWords.insert(line.trim(),null);
         }
 
         line = ""; // Make it empty again
 
-        while ((line = reader.readLine()) != null && !(line.equals(",,"))) {
+        while ((line = reader.readLine()) != null && !(line.equals(",,"))) { // we have to edit it so it skips first line
             String[] data = line.split(",", 2); // Limit=2 means we don't care about the commas that in 
             // System.out.println(data[0]);
             String[] words = data[1].toLowerCase().split(" "); // Convert it to lowercase, and then split it into words.
+            LinkedList<String> indexing = new LinkedList<>();
 
             for (int i = 1; i < words.length; i++) {
-                if (!stopWords.contains(words[i])) {
+                if (!stopWords.find(words[i])) {
                     word = words[i].replaceAll("\\W+", ""); // Remove all punctuations and non-alphanumerical characters
+                    indexing.insert(word);
                     writer.write(word + " ");
                 }
             }
-
+            forwardIndex.insert(docId,indexing);
             writer.newLine();
+            docId++;
         }
         reader.close();
         writer.close();
