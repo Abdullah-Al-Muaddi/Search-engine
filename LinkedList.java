@@ -71,4 +71,14 @@ public class LinkedList<T> {
             current = current.next();
         }
     }
-}
+    @Override
+    public String toString() {
+       String relation="";
+       Node<T> temp = head;
+       while(temp!= null){
+        relation+=temp.data()+" ";
+        temp=temp.next();
+       }
+       return relation;
+
+}}

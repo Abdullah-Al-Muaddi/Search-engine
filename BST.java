@@ -44,7 +44,13 @@ public class BST<K,V> {
     }
 
     private boolean insertRec(BSTNode<K,V> node, K key, V value) {
-        int cmp = ((String)key).compareTo((String)node.key);
+        int cmp;
+        if (key instanceof String){ //in invertedIndex it will be string
+            cmp = ((String)key).compareTo((String)node.key);
+        }
+        else{ // in indexing it will key be integer
+            cmp = ((Integer)key).compareTo((Integer)node.key);
+        }
         if (cmp < 0) {
             if (node.left == null) {
                 node.left = new BSTNode<>(key, value);
@@ -86,4 +92,14 @@ public class BST<K,V> {
             return findRec(node.right, key);
         }
     }
-}
+    public void traverseInorder() {
+        traverseInorder(root);
+    }
+
+    private void traverseInorder(BSTNode<K, V> n) {
+        if (n != null) {
+            traverseInorder(n.left);
+            System.out.println("Word: " + n.key + " -> Documents: " + n.value);//will be changed after
+            traverseInorder(n.right);
+        }
+}}

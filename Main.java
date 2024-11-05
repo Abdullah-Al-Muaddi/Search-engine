@@ -53,7 +53,7 @@ public class Main {
     //---------------------------------------> Binary Search Tree (Will be changed to AVL afterward)<-----------------------------------------
         BST<String,Integer> stopWords = new BST<>();
         BST<Integer, LinkedList<String>> forwardIndex = new BST<>();//used to save each document with it exact words
-        BST<String, LinkedList<Integer>> invertedIndex = new BST<>(); //under maintenance
+        BST<String, LinkedList<String>> invertedIndex = new BST<>(); 
 
     //---------------------------------------> File Read / Write <------------------------------------<
         BufferedReader stopWords_reader = new BufferedReader(new FileReader("data/stop.txt"));
@@ -70,7 +70,7 @@ public class Main {
         }
 
         line = ""; // Make it empty again
-
+        reader.readLine();//we want to skip first line
         while ((line = reader.readLine()) != null && !(line.equals(",,"))) { // we have to edit it so it skips first line
             String[] data = line.split(",", 2); // Limit=2 means we don't care about the commas that in 
             // System.out.println(data[0]);
@@ -82,14 +82,35 @@ public class Main {
                     word = words[i].replaceAll("\\W+", ""); // Remove all punctuations and non-alphanumerical characters
                     indexing.insert(word);
                     writer.write(word + " ");
+                    //Inverted indexing
+                    LinkedList<String> docs;
+                    if (invertedIndex.find(word)){ //if the word happen to be saved already we just retrieve linked list
+                        docs=invertedIndex.retrieve();
+                    }
+                    else{ //word hasn't been saved in the invertedIndex BST
+                        docs=new LinkedList<>();
+                        invertedIndex.insert(word,docs); 
+                    }
+                    docs.insert(String.valueOf(docId)); // add the document id (STRING) to docs list
+
+
+
                 }
             }
             forwardIndex.insert(docId,indexing);
+            // System.out.println("Document ID " + docId + ": " + indexing);//for testing perposes
+            
             writer.newLine();
             docId++;
         }
+
+        //inverted index
+        // invertedIndex.traverseInorder(); //for testing perposes
+
+        
         reader.close();
         writer.close();
         stopWords_reader.close();
     }
+
 }
