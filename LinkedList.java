@@ -16,7 +16,7 @@ public class LinkedList<T> {
     }
 
     public boolean last() {
-        return current.next() == null;
+        return current != null && current.next() == null;
     }
 
     public boolean full() {
@@ -28,11 +28,14 @@ public class LinkedList<T> {
     }
 
     public void findNext() {
-        current = current.next();
+        if (current!=null)
+             current = current.next();
     }
 
     public T retrieve() {
-        return current.data();
+        if(current!=null)
+            return current.data();
+        return null;
     }
 
     public void update(T val) {
@@ -45,6 +48,9 @@ public class LinkedList<T> {
         if (empty()) {
             current = head = new Node<>(val);
         } else {
+            if (current == null) {  // If current is null, start from head
+                current = head;
+            }
             tmp = current.next();
             current.setNext(new Node<>(val));
             current = current.next();
@@ -70,6 +76,17 @@ public class LinkedList<T> {
         } else {
             current = current.next();
         }
+    }
+    public Boolean contains(T val){//used to check if the vaalue is already implemented or not (to insure no duplicate found)
+        Node<T> temp = head;
+        while(temp!=null){
+            if (temp.data().equals(val))
+                 return true;
+            temp=temp.next();
+
+        }
+        return false;
+
     }
     @Override
     public String toString() {

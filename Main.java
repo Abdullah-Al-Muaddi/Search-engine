@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.Scanner;
 
 /*
 1- Documenet processing
@@ -50,21 +51,18 @@ public class Main {
         String word = "";
         int docId=0;
 
-    //---------------------------------------> Binary Search Tree (Will be changed to AVL afterward)<-----------------------------------------
+    //=================================> Binary Search Tree (Will be changed to AVL afterward)<==================================
         BST<String,Integer> stopWords = new BST<>();
         BST<Integer, LinkedList<String>> forwardIndex = new BST<>();//used to save each document with it exact words
         BST<String, LinkedList<String>> invertedIndex = new BST<>(); 
 
-    //---------------------------------------> File Read / Write <------------------------------------<
+    //==================================> File Read / Write <===========================
         BufferedReader stopWords_reader = new BufferedReader(new FileReader("data/stop.txt"));
         BufferedReader reader = new BufferedReader(new FileReader("data\\dataset.csv"));
         BufferedWriter writer = new BufferedWriter(new FileWriter("data/newDataset.txt"));
 
-    //--------------------------------------->Linked Lists<--------------------------------------------
-    // LinkedList<String> indexing = new LinkedList<>();
 
-
-
+        // ====================> Document Processing <====================
         while ((line = stopWords_reader.readLine()) != null) {
             stopWords.insert(line.trim(),null);
         }
@@ -111,6 +109,75 @@ public class Main {
         reader.close();
         writer.close();
         stopWords_reader.close();
-    }
 
-}
+                // ====================> Query Processor and UI <====================
+                QueryProcessor queryProcessor = new QueryProcessor(invertedIndex);
+                Scanner scanner = new Scanner(System.in);
+                boolean running = true;
+        
+                while (running) {
+                    showMenu();
+                    int choice = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+        
+                    switch (choice) {
+                        case 1:
+                            System.out.print("Enter AND query (e.g., 'word1 AND word2'): ");
+                            String andQuery = scanner.nextLine();
+                            String[] andTerms = andQuery.split(" AND ");
+                            if (andTerms.length == 2) {
+                                LinkedList<String> andResults = queryProcessor.andQuery(andTerms[0].trim(), andTerms[1].trim());
+                                System.out.println("AND Query Results: " + andResults);
+                            } else {
+                                System.out.println("Invalid format. Please use 'word1 AND word2'.");
+                            }
+                            break;
+        
+                        case 2:
+                            System.out.print("Enter OR query (e.g., 'word1 OR word2'): ");
+                            String orQuery = scanner.nextLine();
+                            String[] orTerms = orQuery.split(" OR ");
+                            if (orTerms.length == 2) {
+                                LinkedList<String> orResults = queryProcessor.orQuery(orTerms[0].trim(), orTerms[1].trim());
+                                System.out.println("OR Query Results: " + orResults);
+                            } else {
+                                System.out.println("Invalid format. Please use 'word1 OR word2'.");
+                            }
+                            break;
+        
+                        case 3:
+                            System.out.print("Enter query for ranked retrieval (e.g., 'data structures'): ");
+                            String rankedQuery = scanner.nextLine();
+                            LinkedList<DocumentScore> rankedResults = queryProcessor.rankedQuery(rankedQuery);
+                            System.out.println("Ranked Retrieval Results:");
+                            rankedResults.findFirst();
+                            while (!rankedResults.last()) {
+                                System.out.println(rankedResults.retrieve());
+                                rankedResults.findNext();
+                            }
+                            System.out.println(rankedResults.retrieve()); // Print last item
+                            break;
+        
+                        case 4:
+                            System.out.println("Exiting...");
+                            running = false;
+                            break;
+        
+                        default:
+                            System.out.println("Invalid choice. Please try again.");
+                    }
+                }
+        
+                scanner.close();
+            }
+        
+            // ====================> Show Menu <====================
+            private static void showMenu() {
+                System.out.println("\n=== Simple Search Engine ===");
+                System.out.println("1. Boolean AND Query");
+                System.out.println("2. Boolean OR Query");
+                System.out.println("3. Ranked Retrieval");
+                System.out.println("4. Exit");
+                System.out.print("Choose an option: ");
+            }
+        }
