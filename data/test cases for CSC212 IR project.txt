@@ -13,13 +13,13 @@ Result: {8}
 Result: {2, 34, 18, 38, 30, 46, 14}
 
 Q: market OR sports
-Result: {0, 33, 34, 41, 9, 12, 45, 17, 49, 21, 25, 29}
+Result: {0, 33, 34, 41, 9, 12, 45, 17, 49, 21, 25, 29} ------------>// Test it again 0 not founded
 
 Q: market OR sports AND warming .... AND has a higher precedence than OR
 Result: {0, 41, 34, 12}
 
 ################## Ranked Retrieval ###########################
-## Q: market sports
+## Q: market sports ---------------------->//it have to be sorted 
 DocID	Score
 33    2
 41    2
@@ -44,7 +44,7 @@ DocID	Score
 38    1
 46    1
 
-## Q: business world market
+## Q: business world market ---------------->Document 0 doesn't appear
 DocID	Score
 8     2
 0     1
