@@ -122,30 +122,51 @@ public class Main {
         
                     switch (choice) {
                         case 1:
-                            System.out.print("Enter AND query (e.g., 'word1 AND word2'): ");
-                            String andQuery = scanner.nextLine();
-                            String[] andTerms = andQuery.split(" AND ");
-                            if (andTerms.length == 2) {
-                                LinkedList<String> andResults = queryProcessor.andQuery(andTerms[0].trim(), andTerms[1].trim());
-                                System.out.println("AND Query Results: " + andResults);
-                            } else {
-                                System.out.println("Invalid format. Please use 'word1 AND word2'.");
-                            }
+                            System.out.print("Enter AND, OR query (e.g., 'word1 AND word2', 'word1 OR word2'): ");
+                            String Query = scanner.nextLine();
+                            LinkedList<String> Results = queryProcessor.handleQuery(Query);
+                            System.out.println("Query Results: "+ Results);
                             break;
+                            // String[] andTerms =Query.split(" AND ");
+                            // String[] orTerms ;
+                            // LinkedList<String> Results;
+                            // boolean combined_fun=false; //if we have AND + OR it will be true
+                            // if (andTerms.length == 2) {
+                            //     for (int i = 0 ; i<2; i++){ //we already know the length is 2
+                            //        orTerms= Query.split(" OR ");
+
+                            //        if(orTerms.length==2){
+                            //         combined_fun=true;
+                            //         LinkedList<String> orResults=queryProcessor.orQuery(orTerms[0].trim(), orTerms[1].trim());
+                            //         Results=queryProcessor.andOrQuery(andTerms[i-1], orResults);
+                            //         break; //test
+                            //        }
+                            //     }
+                            //     Results=queryProcessor.andQuery(andTerms[0].trim(),andTerms[1].trim());
+                            // } else {
+                            //     orTerms=Query.split(" OR ");
+                            //     if(orTerms.length!=2){
+                            //         System.out.println("Invalid format. Please use the right format.");
+                            //         break;}
+                            //   Results=queryProcessor.orQuery(orTerms[0].trim(), orTerms[1].trim());
+                                
+                            // }
+                            // System.out.println("Query Results: "+ Results);
+                            // break;
+        
+                        // case 2:
+                        //     System.out.print("Enter OR query (e.g., 'word1 OR word2'): ");
+                        //     String orQuery = scanner.nextLine();
+                        //     String[] orTerms = orQuery.split(" OR ");
+                        //     if (orTerms.length == 2) {
+                        //         LinkedList<String> orResults = queryProcessor.orQuery(orTerms[0].trim(), orTerms[1].trim());
+                        //         System.out.println("OR Query Results: " + orResults);
+                        //     } else {
+                        //         System.out.println("Invalid format. Please use 'word1 OR word2'.");
+                        //     }
+                        //     break;
         
                         case 2:
-                            System.out.print("Enter OR query (e.g., 'word1 OR word2'): ");
-                            String orQuery = scanner.nextLine();
-                            String[] orTerms = orQuery.split(" OR ");
-                            if (orTerms.length == 2) {
-                                LinkedList<String> orResults = queryProcessor.orQuery(orTerms[0].trim(), orTerms[1].trim());
-                                System.out.println("OR Query Results: " + orResults);
-                            } else {
-                                System.out.println("Invalid format. Please use 'word1 OR word2'.");
-                            }
-                            break;
-        
-                        case 3:
                             System.out.print("Enter query for ranked retrieval (e.g., 'data structures'): ");
                             String rankedQuery = scanner.nextLine();
                             LinkedList<DocumentScore> rankedResults = queryProcessor.rankedQuery(rankedQuery);
@@ -158,7 +179,7 @@ public class Main {
                             System.out.println(rankedResults.retrieve()); // Print last item
                             break;
         
-                        case 4:
+                        case 3:
                             System.out.println("Exiting...");
                             running = false;
                             break;
@@ -174,10 +195,9 @@ public class Main {
             // ====================> Show Menu <====================
             private static void showMenu() {
                 System.out.println("\n=== Simple Search Engine ===");
-                System.out.println("1. Boolean AND Query");
-                System.out.println("2. Boolean OR Query");
-                System.out.println("3. Ranked Retrieval");
-                System.out.println("4. Exit");
+                System.out.println("1. Boolean Retrieval (AND , OR)");
+                System.out.println("2. Ranked Retrieval");
+                System.out.println("3. Exit");
                 System.out.print("Choose an option: ");
             }
         }
