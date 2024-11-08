@@ -99,31 +99,7 @@ public class QueryProcessor {
 
         return resultSet;
     }
-    // public LinkedList<String> handleQuery(String Query) {
-    //     String[] andTerms ;
-    //     String[] orTerms= Query.split(" OR ");
-    //     LinkedList<String> Results;
-    
-    //     if (orTerms.length == 2) {
-    //         for (int i = 0; i < 2; i++) {
-    //             andTerms =orTerms[i].split(" AND ");
-    //             if (andTerms.length == 2) {
-    //                 LinkedList<String> andResults = andQuery(andTerms[0].trim(), andTerms[1].trim());
-    //                 int otherIndex = 1 - i; // used to Calculate the other index
-    //                 Results = andOrQuery(andTerms[otherIndex].trim(), andResults);
-    //                 return Results; // Combined AND + OR query
-    //             }
-    //         }
-    //         Results =orQuery(orTerms[0].trim(), orTerms[1].trim()); // OR query
-    //     } else {
-    //         andTerms = Query.split(" AND ");
-    //         if (andTerms.length != 2) {
-    //             return null; // Invalid format
-    //         }
-    //         Results = andQuery(andTerms[0].trim(), andTerms[1].trim()); // AND query 
-    //     }
-    //     return Results;
-    // }
+ 
     public LinkedList<String> handleQuery(String Query) {
         String[] andTerms;
         String[] orTerms = Query.split(" OR ");
