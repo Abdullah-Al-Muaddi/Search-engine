@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Scanner;
 
 /*
 1- Documenet processing
@@ -75,7 +74,7 @@ public class Main {
             String[] words = data[1].toLowerCase().split(" "); // Convert it to lowercase, and then split it into words.
             LinkedList<String> indexing = new LinkedList<>();
 
-            for (int i = 1; i < words.length; i++) {
+            for (int i = 0; i < words.length; i++) {
                 if (!stopWords.find(words[i])) {
                     word = words[i].replaceAll("\\W+", ""); // Remove all punctuations and non-alphanumerical characters
                     indexing.insert(word);
@@ -112,54 +111,8 @@ public class Main {
 
                 // ====================> Query Processor and UI <====================
                 QueryProcessor queryProcessor = new QueryProcessor(invertedIndex);
-                Scanner scanner = new Scanner(System.in);
-                boolean running = true;
-        
-                while (running) {
-                    showMenu();
-                    int choice = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
-        
-                    switch (choice) {
-                        case 1:
-                            System.out.print("Enter AND, OR query (e.g., 'word1 AND word2', 'word1 OR word2'): ");
-                            String Query = scanner.nextLine();
-                            LinkedList<String> Results = queryProcessor.handleQuery(Query);
-                            System.out.println("Query Results: "+ Results);
-                            break;
-       
-                        case 2:
-                            System.out.print("Enter query for ranked retrieval (e.g., 'data structures'): ");
-                            String rankedQuery = scanner.nextLine();
-                            LinkedList<DocumentScore> rankedResults = queryProcessor.rankedQuery(rankedQuery);
-                            System.out.println("Ranked Retrieval Results:");
-                            rankedResults.findFirst();
-                            while (!rankedResults.last()) {
-                                System.out.println(rankedResults.retrieve());
-                                rankedResults.findNext();
-                            }
-                            System.out.println(rankedResults.retrieve()); // Print last item
-                            break;
-        
-                        case 3:
-                            System.out.println("Exiting...");
-                            running = false;
-                            break;
-        
-                        default:
-                            System.out.println("Invalid choice. Please try again.");
-                    }
-                }
-        
-                scanner.close();
-            }
-        
-            // ====================> Show Menu <====================
-            private static void showMenu() {
-                System.out.println("\n=== Simple Search Engine ===");
-                System.out.println("1. Boolean Retrieval (AND , OR)");
-                System.out.println("2. Ranked Retrieval");
-                System.out.println("3. Exit");
-                System.out.print("Choose an option: ");
-            }
-        }
+
+
+                    // =====> Create GUI <=====
+                    GUI gui = new GUI(queryProcessor);
+        }}

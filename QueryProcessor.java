@@ -204,25 +204,29 @@ public class QueryProcessor {
     
 
 
-    // Ranked Retrieval using Term Frequency
-    public LinkedList<DocumentScore> rankedQuery(String query) {
-        String[] terms = query.toLowerCase().split(" "); // Split query into terms
-        LinkedList<DocumentScore> rankedResults = new LinkedList<>(); // Holds results with scores
+ // Ranked Retrieval using Term Frequency
+public LinkedList<DocumentScore> rankedQuery(String query) {
+    String[] terms = query.toLowerCase().split(" "); // Split query into terms
+    LinkedList<DocumentScore> rankedResults = new LinkedList<>(); // Holds results with scores
 
-        for (String term : terms) {
-            if (invertedIndex.find(term)) {
-                LinkedList<String> docs = invertedIndex.retrieve();
-                docs.findFirst();
-                while (!docs.last()) {
-                    addOrUpdateScore(rankedResults, docs.retrieve());
-                    docs.findNext();
-                }
+    for (int i = 0; i < terms.length; i++) {
+        String term = terms[i];
+        if (invertedIndex.find(term)) {
+            LinkedList<String> docs = invertedIndex.retrieve();
+            docs.findFirst();
+            while (!docs.last()) {
                 addOrUpdateScore(rankedResults, docs.retrieve());
+                docs.findNext();
             }
+            addOrUpdateScore(rankedResults, docs.retrieve());
         }
-
-        return rankedResults;
     }
+
+    // Sort the rankedResults linked list in descending order
+    rankedResults = sortRankedResults(rankedResults);
+
+    return rankedResults;
+}
 
     // Helper method to add or update the score for a document in rankedResults
     private void addOrUpdateScore(LinkedList<DocumentScore> list, String docId) {
@@ -246,7 +250,68 @@ public class QueryProcessor {
             list.insert(new DocumentScore(docId, 1));
         }
     }
-    
+// Method to sort the rankedResults linked list in descending order using selection sort
+private LinkedList<DocumentScore> sortRankedResults(LinkedList<DocumentScore> list) {
+    // Count the number of elements in the list
+    int count = 0;
+    list.findFirst();
+    while (true) {
+        if (list.retrieve() != null) {
+            count++;
+        }
+        if (list.last()) {
+            break;
+        }
+        list.findNext();
+    }
+
+    // Copy elements to an array
+    DocumentScore[] scoreArray = new DocumentScore[count];
+    int index = 0;
+    list.findFirst();
+    while (true) {
+        if (list.retrieve() != null) {
+            scoreArray[index] = list.retrieve();
+            index++;
+        }
+        if (list.last()) {
+            break;
+        }
+        list.findNext();
+    }
+
+    // Selection sort algorithm with secondary sorting by document numbers
+    for (int i = 0; i < count - 1; i++) {
+        int maxIndex = i;
+        for (int j = i + 1; j < count; j++) {
+            if (scoreArray[j].getScore() > scoreArray[maxIndex].getScore()) {
+                maxIndex = j;
+            } else if (scoreArray[j].getScore() == scoreArray[maxIndex].getScore()) {
+                // Scores are equal, compare document numbers
+                int docId1 = Integer.parseInt(scoreArray[j].getDocId());
+                int docId2 = Integer.parseInt(scoreArray[maxIndex].getDocId());
+                if (docId1 < docId2) {
+                    maxIndex = j;
+                }
+            }
+        }
+        // Swap the found maximum element with the first element
+        if (maxIndex != i) {
+            DocumentScore temp = scoreArray[i];
+            scoreArray[i] = scoreArray[maxIndex];
+            scoreArray[maxIndex] = temp;
+        }
+    }
+
+    // Reconstruct the linked list from the sorted array
+    LinkedList<DocumentScore> sortedList = new LinkedList<>();
+    for (int i = 0; i < count; i++) {
+        sortedList.insert(scoreArray[i]);
+    }
+
+    return sortedList;
+}
+
     
 
 }
