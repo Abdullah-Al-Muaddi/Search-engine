@@ -1,10 +1,10 @@
 public class QueryProcessor {
     
     // ====================> Attributes <====================
-    private BST<String, LinkedList<String>> invertedIndex;
+    private AVLTree<String, LinkedList<String>> invertedIndex;
 
     // ====================> Constructor <====================
-    public QueryProcessor(BST<String, LinkedList<String>> invertedIndex) {
+    public QueryProcessor(AVLTree<String, LinkedList<String>> invertedIndex) {
         this.invertedIndex = invertedIndex;
     }
 

@@ -6,7 +6,7 @@ import java.io.FileWriter;
 
 /*
 1- Documenet processing
-    1.1- Using BST to store stop.txt
+    1.1- Using AVLTree to store stop.txt
     1.2- Store the data (In which way? Consider the speed)
     1.3- Delete stop words from data
 
@@ -17,7 +17,7 @@ import java.io.FileWriter;
     2.4- 
 
 3- Inverted indexing 
-    3.1- Where is the word stored in which documenet by using BST
+    3.1- Where is the word stored in which documenet by using AVLTree
     3.2- 
     3.3- 
     3.4- 
@@ -50,10 +50,10 @@ public class Main {
         String word = "";
         int docId=0;
 
-    //=================================> Binary Search Tree (Will be changed to AVL afterward)<==================================
-        BST<String,Integer> stopWords = new BST<>();
-        BST<Integer, LinkedList<String>> forwardIndex = new BST<>();//used to save each document with it exact words
-        BST<String, LinkedList<String>> invertedIndex = new BST<>(); 
+    //=================================>AVL Tree<==================================
+        AVLTree<String,Integer> stopWords = new AVLTree<>();
+        AVLTree<Integer, LinkedList<String>> forwardIndex = new AVLTree<>();//used to save each document with it exact words
+        AVLTree<String, LinkedList<String>> invertedIndex = new AVLTree<>(); 
 
     //==================================> File Read / Write <===========================
         BufferedReader stopWords_reader = new BufferedReader(new FileReader("data/stop.txt"));
@@ -84,7 +84,7 @@ public class Main {
                     if (invertedIndex.find(word)){ //if the word happen to be saved already we just retrieve linked list
                         docs=invertedIndex.retrieve();
                     }
-                    else{ //word hasn't been saved in the invertedIndex BST
+                    else{ //word hasn't been saved in the invertedIndex AVLTree
                         docs=new LinkedList<>();
                         invertedIndex.insert(word,docs); 
                     }
