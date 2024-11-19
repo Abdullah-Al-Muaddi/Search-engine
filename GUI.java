@@ -1,6 +1,5 @@
+import java.awt.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class GUI {
 
@@ -12,65 +11,106 @@ public class GUI {
     }
 
     private void createAndShowGUI() {
-        // Create the main window (frame)
-        JFrame frame = new JFrame("Simple Search Engine");
+        // ==================================> Frame <==================================
+        JFrame frame = new JFrame("Search Engine");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 200);
+        frame.setMinimumSize(new Dimension(500, 250));
 
-        // Create components
+        // ==================================> Components <==================================
         JLabel label = new JLabel("Enter your query:");
-        JTextField queryField = new JTextField(30);
+        JTextField queryField = new JTextField();
         JButton booleanButton = new JButton("Boolean Retrieval (AND, OR)");
         JButton rankedButton = new JButton("Ranked Retrieval");
+        JLabel outputLabel = new JLabel("Output:");
+        JTextArea outputArea = new JTextArea();
+        outputArea.setEditable(false);
+        outputArea.setLineWrap(true);
+        outputArea.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(outputArea);
 
-        // Create panel and add components
-        JPanel panel = new JPanel();
-        panel.add(label);
-        panel.add(queryField);
-        panel.add(booleanButton);
-        panel.add(rankedButton);
+        // ==================================> Panels <==================================
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-        // Add panel to frame
-        frame.getContentPane().add(panel);
+        GridBagConstraints gbc = new GridBagConstraints();
+        Insets insets = new Insets(5, 5, 5, 5);
+        gbc.insets = insets;
 
-        // Action listener for Boolean Retrieval button
-        booleanButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String Query = queryField.getText();
-                LinkedList<String> Results = queryProcessor.handleQuery(Query);
-                if (Results != null && !Results.empty()) {
-                    JOptionPane.showMessageDialog(frame, "Query Results: " + Results.toString());
-                } else {
-                    JOptionPane.showMessageDialog(frame, "No results found.");
-                }
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        inputPanel.add(label, gbc);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        inputPanel.add(queryField, gbc);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        buttonPanel.add(booleanButton);
+        buttonPanel.add(rankedButton);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        inputPanel.add(buttonPanel, gbc);
+
+        JPanel outputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbcOutput = new GridBagConstraints();
+        gbcOutput.insets = insets;
+
+        gbcOutput.gridx = 0;
+        gbcOutput.gridy = 0;
+        gbcOutput.anchor = GridBagConstraints.WEST;
+        outputPanel.add(outputLabel, gbcOutput);
+
+        gbcOutput.gridy = 1;
+        gbcOutput.fill = GridBagConstraints.BOTH;
+        gbcOutput.weightx = 1.0;
+        gbcOutput.weighty = 1.0;
+        outputPanel.add(scrollPane, gbcOutput);
+
+        // ==================================> Main Panel <==================================
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(inputPanel, BorderLayout.NORTH);
+        mainPanel.add(outputPanel, BorderLayout.CENTER);
+
+        frame.getContentPane().add(mainPanel);
+
+        // ==================================> Buttons <==================================
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~> Boolean Retrieval Button <~~~~~~~~~~~~~~~~~~~~~~~~~~
+        booleanButton.addActionListener(e -> {
+            String query = queryField.getText();
+            LinkedList<String> results = queryProcessor.handleQuery(query);
+            if (results != null && !results.empty()) {
+                outputArea.setText("Query Results:\n" + results.toString());
+            } else {
+                outputArea.setText("No results found.");
             }
         });
 
-        // Action listener for Ranked Retrieval button
-        rankedButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String rankedQuery = queryField.getText();
-                LinkedList<DocumentScore> rankedResults = queryProcessor.rankedQuery(rankedQuery);
-                if (rankedResults != null && !rankedResults.empty()) {
-                    StringBuilder resultString = new StringBuilder();
-                    rankedResults.findFirst();
-                    while (true) {
-                        resultString.append(rankedResults.retrieve().toString()).append("\n");
-                        if (rankedResults.last()) {
-                            break;
-                        }
-                        rankedResults.findNext();
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~> Ranked Retrieval Button <~~~~~~~~~~~~~~~~~~~~~~~~~~
+        rankedButton.addActionListener(e -> {
+            String rankedQuery = queryField.getText();
+            LinkedList<DocumentScore> rankedResults = queryProcessor.rankedQuery(rankedQuery);
+            if (rankedResults != null && !rankedResults.empty()) {
+                StringBuilder resultString = new StringBuilder("Ranked Retrieval Results:\n");
+                rankedResults.findFirst();
+                resultString.append("DocID\tScore\n");
+                while (true) {
+                    resultString.append(rankedResults.retrieve().toString()).append("\n");
+                    if (rankedResults.last()) {
+                        break;
                     }
-                    JOptionPane.showMessageDialog(frame, "Ranked Retrieval Results:\n" + resultString.toString());
-                } else {
-                    JOptionPane.showMessageDialog(frame, "No results found.");
+                    rankedResults.findNext();
                 }
+                outputArea.setText(resultString.toString());
+            } else {
+                outputArea.setText("No results found.");
             }
         });
 
-        // Display the window
         frame.setVisible(true);
     }
 }

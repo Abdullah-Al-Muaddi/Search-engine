@@ -1,6 +1,6 @@
-// ====================> DocumentScore Class <====================
+
 public class DocumentScore {
-    
+
     // ====================> Attributes <====================
     private String docId;
     private int score;
@@ -20,20 +20,19 @@ public class DocumentScore {
         return score;
     }
 
-    // ====================> Increment Score <====================
+    // ====================> Methods <====================
     public void incrementScore() {
         this.score++;
     }
 
-    // ====================> Set Document ID and Score <====================
     public void set(String docId, int score) {
         this.docId = docId;
         this.score = score;
     }
 
-    // ====================> toString Override <====================
+    // ====================> toString <====================
     @Override
     public String toString() {
-        return "Document " + docId + ": Score = " + score;
+        return docId + "\t" + score;
     }
 }

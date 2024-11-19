@@ -28,13 +28,15 @@ public class LinkedList<T> {
     }
 
     public void findNext() {
-        if (current!=null)
-             current = current.next();
+        if (current != null) {
+            current = current.next();
+        }
     }
 
     public T retrieve() {
-        if(current!=null)
+        if (current != null) {
             return current.data();
+        }
         return null;
     }
 
@@ -48,7 +50,7 @@ public class LinkedList<T> {
         if (empty()) {
             current = head = new Node<>(val);
         } else {
-            if (current == null) {  // If current is null, start from head
+            if (current == null) {
                 current = head;
             }
             tmp = current.next();
@@ -77,25 +79,33 @@ public class LinkedList<T> {
             current = current.next();
         }
     }
-    public Boolean contains(T val){//used to check if the vaalue is already implemented or not (to insure no duplicate found)
-        Node<T> temp = head;
-        while(temp!=null){
-            if (temp.data().equals(val))
-                 return true;
-            temp=temp.next();
 
+    public Boolean contains(T val) {
+        Node<T> temp = head;
+
+        while (temp != null) {
+            if (temp.data().equals(val)) {
+                return true;
+            }
+            temp = temp.next();
         }
         return false;
-
     }
+
+    // ====================> toString <====================
     @Override
     public String toString() {
-       String relation="";
-       Node<T> temp = head;
-       while(temp!= null){
-        relation+=temp.data()+" ";
-        temp=temp.next();
-       }
-       return relation;
+        String relation = "";
 
-}}
+        Node<T> temp = head;
+        while (temp != null) {
+            if (temp.next()!=null){
+                relation += temp.data() + ", ";
+            } else {
+                relation += temp.data() + ".";
+            }
+            temp = temp.next();
+        }
+        return relation;
+    }
+}
