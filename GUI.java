@@ -84,7 +84,7 @@ public class GUI {
             String query = queryField.getText();
             LinkedList<String> results = queryProcessor.handleQuery(query);
             if (results != null && !results.empty()) {
-                outputArea.setText("Query Results:\n" + results.toString());
+                outputArea.setText("Query Results: { " + results.toString()+" }");
             } else {
                 outputArea.setText("No results found.");
             }

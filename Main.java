@@ -35,7 +35,7 @@ public class Main {
                 if (!stopWords.find(words[i])) {
                     word = words[i].replaceAll("\\W+", ""); // Remove all punctuations and non-alphanumerical characters
                     indexing.insert(word);
-                    // writer.write(word + " ");                              // FOR TESTING
+                    writer.write(word + " ");                              // FOR TESTING (to see if the data cleaned or not)
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~> Inverted Indexing <~~~~~~~~~~~~~~~~~~~~~~~~~~
                     LinkedList<String> docs;

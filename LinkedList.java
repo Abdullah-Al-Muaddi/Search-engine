@@ -101,8 +101,9 @@ public class LinkedList<T> {
         while (temp != null) {
             if (temp.next()!=null){
                 relation += temp.data() + ", ";
-            } else {
-                relation += temp.data() + ".";
+            }
+            else{
+                relation += temp.data();
             }
             temp = temp.next();
         }

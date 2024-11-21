@@ -215,6 +215,9 @@ public class QueryProcessor {
 
     // ====================> Ranked Retrieval <====================
     public LinkedList<DocumentScore> rankedQuery(String query) {
+  
+        if (query.isEmpty())//check if empty or not
+            return null;
         String[] terms = query.toLowerCase().split(" "); 
         LinkedList<DocumentScore> rankedResults = new LinkedList<>(); 
 
@@ -230,7 +233,8 @@ public class QueryProcessor {
                 addOrUpdateScore(rankedResults, docs.retrieve());
             }
         }
-        rankedResults = sortRankedResults(rankedResults);
+        if(!rankedResults.empty()) //we found the query at least once in the dataset
+            rankedResults = sortRankedResults(rankedResults);
 
         return rankedResults;
     }
