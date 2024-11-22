@@ -28,22 +28,22 @@ public class QueryProcessor {
             return new LinkedList<>();
         }
 
-        LinkedList<String> result = new LinkedList<>();
+        LinkedList<String> resultSet = new LinkedList<>();
         list1.findFirst();
 
         while (!list1.last()) {
             String doc = list1.retrieve();
             if (list2.contains(doc)) {
-                result.insert(doc);
+                resultSet.insert(doc);
             }
             list1.findNext();
         }
 
         if (list2.contains(list1.retrieve())) {
-            result.insert(list1.retrieve());
+            resultSet.insert(list1.retrieve());
         }
 
-        return result;
+        return resultSet;
     }
 
     // ~~~~~~~~~~~~~~~~~~~~> OR <~~~~~~~~~~~~~~~~~~~~
@@ -92,7 +92,38 @@ public class QueryProcessor {
 
         return resultSet;
     }
+    // ~~~~~~~~~~~~~~~~~~~~> NOT <~~~~~~~~~~~~~~~~~~~~
+    public LinkedList<String> notQuery(String term1, String term2) {
+        LinkedList<String> list1 = null, list2 = null;
+        if (invertedIndex.find(term1)) {
+            list1 = invertedIndex.retrieve();
+        }
 
+        if (invertedIndex.find(term2)) {
+            list2 = invertedIndex.retrieve();
+        }
+        if (list1 == null ) {
+            return new LinkedList<>();
+        }
+        if(list2 ==null){ // if the NOT term not found we just return the first term as it is
+            return list1;
+        }
+        LinkedList<String> resultSet = new LinkedList<>();
+        list1.findFirst();
+        while (!list1.last()) {
+            String doc = list1.retrieve();
+            if (!list2.contains(doc)) { //if it's not on the second term
+                resultSet.insert(doc);
+            }
+            list1.findNext();
+        }
+        if (!list2.contains(list1.retrieve())) {
+            resultSet.insert(list1.retrieve());
+        }
+
+        return resultSet;
+
+    }
     // ~~~~~~~~~~~~~~~~~~~~> AND & OR <~~~~~~~~~~~~~~~~~~~~
     public LinkedList<String> andOrQuery(String term1, LinkedList<String> resultSet) {
         LinkedList<String> list1 = null;
@@ -124,6 +155,7 @@ public class QueryProcessor {
     public LinkedList<String> handleQuery(String Query) {
         String[] andTerms;
         String[] orTerms = Query.split(" OR ");
+        String[] notTerms;
         LinkedList<String> Results = null;
 
         if (orTerms.length == 2) { // Process first OR
@@ -163,18 +195,24 @@ public class QueryProcessor {
             andTerms = Query.split(" AND ");
             if (andTerms.length == 2) { // Process AND
                 Results = andQuery(andTerms[0].trim().toLowerCase(), andTerms[1].trim().toLowerCase()); 
-            } else if (andTerms.length == 1) { // Single term
+            } else if (andTerms.length == 1) { // No {AND,OR} check for NOT
+                // System.out.println("we are on line 199");        //testing perposes
                 String term = andTerms[0].trim();
-                if (invertedIndex.find(term)) {
+                notTerms = Query.split(" NOT ");
+                if(notTerms.length==2) // there is "NOT" boolean expression
+                     Results=notQuery(notTerms[0].trim().toLowerCase(),notTerms[1].trim().toLowerCase());
+                else{ //there is no boolean expression so we return the documents term as is it                    
+                    if (invertedIndex.find(term)) {
                     Results = invertedIndex.retrieve();
-                } else {
+                  } else {
                     Results = new LinkedList<>(); 
-                }
+                     }}
             } else {
-                return null; 
+                return null;
+
             }
-        } else {
-            return null; 
+        } else { 
+            return null;
         }
 
         return Results;
