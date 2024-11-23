@@ -19,7 +19,7 @@ public class GUI {
         // ==================================> Components <==================================
         JLabel label = new JLabel("Enter your query:");
         JTextField queryField = new JTextField();
-        JButton booleanButton = new JButton("Boolean Retrieval (AND, OR)");
+        JButton booleanButton = new JButton("Boolean Retrieval (AND, OR, NOT)");
         JButton rankedButton = new JButton("Ranked Retrieval");
         JLabel outputLabel = new JLabel("Output:");
         JTextArea outputArea = new JTextArea();
